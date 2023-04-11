@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+
+	"github.com/vituchon/labora-golang-course/segment-value-by-ranges/segmentor"
 )
 
 func main() {
@@ -16,5 +18,5 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(SegmentarValorPorRangos(x))
+	fmt.Println(segmentor.SegmentarValorPorRangos(x))
 }

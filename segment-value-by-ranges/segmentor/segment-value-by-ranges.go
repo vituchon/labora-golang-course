@@ -1,9 +1,11 @@
-package main
+package segmentor
 
-/**
+/*
+*
 Con a&&uda de "graficar" una tabla de resultados para cada caso, hago una primera implementación
 
-    x              | s1 | s2     | s3         | s4      | s5
+	x              | s1 | s2     | s3         | s4      | s5
+
 0    < x <= 50     | x  | 0      | 0          | 0       | 0
 50   < x <= 100    | 50 | x - 50 | 0          | 0       | 0
 100  < x <= 700    | 50 | 50     | x - 100    | 0       | 0
