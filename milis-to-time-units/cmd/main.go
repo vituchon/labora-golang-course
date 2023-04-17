@@ -7,8 +7,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/vituchon/labora-golang-course/milis-to-time-units/resolution/home"
-	"github.com/vituchon/labora-golang-course/milis-to-time-units/resolution/stackoverflow"
+	homeResolution "github.com/vituchon/labora-golang-course/milis-to-time-units/resolution/home"
+	soResolution "github.com/vituchon/labora-golang-course/milis-to-time-units/resolution/stackoverflow"
 )
 
 func main() {
@@ -23,8 +23,8 @@ func main() {
 		inputStr := scanner.Text()
 		durationInMilis, err := strconv.Atoi(inputStr)
 		if err == nil {
-			fmt.Printf("Result (using stackoverflow implementation):%+v\n", stackoverflow.SplitSecondsInDaysHoursMinutesAndSeconds(durationInMilis))
-			fmt.Printf("Result (using home made implementation):%+v\n", home.SplitSecondsInDaysHoursMinutesAndSeconds(durationInMilis))
+			fmt.Printf("Result (using stackoverflow implementation):%+v\n", soResolution.SplitSecondsInDaysHoursMinutesAndSeconds(durationInMilis))
+			fmt.Printf("Result (using home made implementation):%+v\n", homeResolution.SplitSecondsInDaysHoursMinutesAndSeconds(durationInMilis))
 		} else {
 			fmt.Printf("IOooooo: '%v'", err)
 		}
