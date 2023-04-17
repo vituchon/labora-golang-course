@@ -7,7 +7,7 @@ import (
 	"github.com/vituchon/labora-golang-course/milis-to-time-units/resolution"
 )
 
-func TestSplitMsInDaysHoursMinutesAndSeconds(t *testing.T) {
+func TestSplitSecondsInDaysHoursMinutesAndSeconds(t *testing.T) {
 
 	testRuns := []struct {
 		title    string
