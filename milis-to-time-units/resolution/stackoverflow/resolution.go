@@ -1,23 +1,18 @@
-package resolution_stack_overflow
+package stackoverflow
 
 import (
 	"math"
+
+	"github.com/vituchon/labora-golang-course/milis-to-time-units/resolution"
 )
 
-type Result struct {
-	days    int
-	hours   int
-	minutes int
-	seconds int
-}
-
-func SplitSecondsInDaysHoursMinutesAndSeconds(durationInSeconds int) Result {
+func SplitSecondsInDaysHoursMinutesAndSeconds(durationInSeconds int) resolution.Result {
 	durationInMilis := durationInSeconds * 1000
 	return splitMsInDaysHoursMinutesAndSeconds(durationInMilis)
 }
 
 // https://go.dev/play/p/fA_rb-znoeu
-func splitMsInDaysHoursMinutesAndSeconds(durationInMilis int) Result {
+func splitMsInDaysHoursMinutesAndSeconds(durationInMilis int) resolution.Result {
 	const (
 		second int = 1000
 		minute int = second * 60
@@ -29,11 +24,11 @@ func splitMsInDaysHoursMinutesAndSeconds(durationInMilis int) Result {
 	minutes := math.Floor(float64((durationInMilis % (hour)) / (minute)))
 	seconds := math.Floor(float64((durationInMilis % (minute)) / (second)))
 
-	return Result{
-		days:    int(days),
-		hours:   int(hours),
-		minutes: int(minutes),
-		seconds: int(seconds),
+	return resolution.Result{
+		Days:    int(days),
+		Hours:   int(hours),
+		Minutes: int(minutes),
+		Seconds: int(seconds),
 	}
 }
 

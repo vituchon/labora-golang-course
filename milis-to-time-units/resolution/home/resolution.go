@@ -1,17 +1,12 @@
-package resolution_home_made
+package home
 
 import (
 	"math"
+
+	"github.com/vituchon/labora-golang-course/milis-to-time-units/resolution"
 )
 
-type Result struct {
-	days    int
-	hours   int
-	minutes int
-	seconds int
-}
-
-func SplitSecondsInDaysHoursMinutesAndSeconds(durationInSeconds int) Result {
+func SplitSecondsInDaysHoursMinutesAndSeconds(durationInSeconds int) resolution.Result {
 	const (
 		secondsPerMinute int = 60
 		secondsPerHour   int = secondsPerMinute * 60
@@ -29,11 +24,11 @@ func SplitSecondsInDaysHoursMinutesAndSeconds(durationInSeconds int) Result {
 
 	seconds := remainingSeconds % (secondsPerMinute)
 
-	return Result{
-		days:    int(days),
-		hours:   int(hours),
-		minutes: int(minutes),
-		seconds: int(seconds),
+	return resolution.Result{
+		Days:    int(days),
+		Hours:   int(hours),
+		Minutes: int(minutes),
+		Seconds: int(seconds),
 	}
 }
 
