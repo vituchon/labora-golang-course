@@ -13,7 +13,12 @@ func main() {
 	// primero solo descomenten executionWithoutConcurrency y corranlo
 	//executionWithoutConcurrency()
 	// luego solo descomenten executionWithConcurrency y sientan la concurrencia en su salsa!
-	//executionWithConcurrency()
+	executionWithConcurrency()
+
+	/*fmt.Println("Sin concurrencia")
+	longRunningTasksWithoutConcurrency()
+	fmt.Println("Con concurrencia")
+	longRunningTasksWithoutConcurrency()*/
 }
 
 /*
@@ -69,7 +74,7 @@ func doAnExpensiveSum() int {
 func getNumberFromStdin() int {
 	scanner := bufio.NewScanner(os.Stdin)
 	for true {
-		fmt.Println("Enter valid number (or press CTR+C abort):")
+		fmt.Println("Enter valid number (or press CTR+D abort):")
 		hasInput := scanner.Scan()
 		if !hasInput {
 			break
@@ -81,4 +86,39 @@ func getNumberFromStdin() int {
 		}
 	}
 	return 0
+}
+
+func sumConsecutiveInteger(from int, to int) int {
+	ac := 0
+	for i := from; i <= to; i++ {
+		ac += i
+	}
+	return ac
+}
+
+func longRunningTasksWithoutConcurrency() {
+	sum := sumConsecutiveInteger(0, 3000000000)
+	fmt.Println(sum)
+
+	sum2 := sumConsecutiveInteger(10000, 4000000000)
+	fmt.Println(sum2)
+}
+
+func longRunningTasksWithConcurrency() {
+	var wg sync.WaitGroup
+
+	wg.Add(2)
+
+	go func() {
+		sum1 := sumConsecutiveInteger(0, 3000000000)
+		fmt.Println(sum1)
+		wg.Done()
+	}()
+	go func() {
+		sum2 := sumConsecutiveInteger(10000, 4000000000)
+		fmt.Println(sum2)
+		wg.Done()
+	}()
+
+	wg.Wait()
 }
