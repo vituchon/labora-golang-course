@@ -12,9 +12,10 @@ type ReadDirResult struct {
 }
 
 func main() {
-	getNotUsingChannels()
+	/*getNotUsingChannels()
 	fmt.Println("-------------")
-	getUsingChannels()
+	getUsingChannels()*/
+	getUsingChannels2()
 
 }
 
@@ -79,4 +80,28 @@ func getNotUsingChannels() {
 	for index, readDirResult := range readDirResults {
 		fmt.Printf("readDirResults[%d]=%+v\n", index, readDirResult)
 	}
+}
+
+func getUsingChannels2() {
+	var paths []string = []string{".", "..", "/", "kas"}
+
+	channel := make(chan string)
+	for workerNumber := 1; workerNumber <= len(paths); workerNumber++ {
+		fmt.Printf("Starting go routine %d for path %s\n", workerNumber, paths[workerNumber-1])
+		go func(workerNumber int, path string) {
+			files, err := os.ReadDir(path)
+			if err != nil {
+				return
+			}
+
+			for _, file := range files {
+				channel <- file.Name()
+			}
+		}(workerNumber, paths[workerNumber-1])
+	}
+
+	for a := range channel {
+		fmt.Println(a)
+	}
+
 }

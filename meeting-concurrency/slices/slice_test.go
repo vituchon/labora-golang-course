@@ -38,7 +38,7 @@ func TestSumsWork(t *testing.T) {
 }
 
 // para correr los benchmark
-// $slices/go test -benchmem -run=^$ -bench=BenchmarkSum*  github.com/vituchon/labora-golang-course/metting-concurrency/slices
+// $slices/go test -benchmem -run=^$ -bench=BenchmarkSum*  github.com/vituchon/labora-golang-course/meeting-concurrency/slices
 
 var slice = rand.Perm(10000000)
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 )
 
@@ -35,10 +36,11 @@ func main() {
 	err = row.Scan(&id)
 	fmt.Println("INSERT err:", err, ", id:", id)
 
-	_ , err = dbConn.Exec("UPDATE items set product = 'polenta' where id = 1;")
+	_, err = dbConn.Exec("UPDATE items set product = 'polenta' where id = 1;")
 	fmt.Println("UPDATE err:", err)
 
 	printAllItems(dbConn)
+	printAllAlPaso(dbConn)
 }
 
 func establishDbConnection() (*sql.DB, error) {
@@ -53,7 +55,7 @@ func printAllItems(dbConn *sql.DB) {
 		from items`
 
 	rows, err := dbConn.Query(query)
-	if (err != nil) {
+	if err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -62,22 +64,53 @@ func printAllItems(dbConn *sql.DB) {
 	for rows.Next() {
 		var item Item
 		err := rows.Scan(&item.Id, &item.Code, &item.CustomerName, &item.OrderDate, &item.Product, &item.Quantity, &item.Price)
-		if (err != nil) {
+		if err != nil {
 			fmt.Println(err)
 			continue
 		}
-		items = append(items,item)
+		items = append(items, item)
 	}
 
 	fmt.Printf("items: %+v\n", items)
 }
 
 type Item struct {
-	Id int
-	Code int
-  CustomerName string
-  OrderDate int
-  Product string
-  Quantity int
-  Price int
+	Id           int
+	Code         int
+	CustomerName string
+	OrderDate    int
+	Product      string
+	Quantity     int
+	Price        int
+}
+
+type AlPaso struct {
+	Id   int
+	Date pq.NullTime
+}
+
+func printAllAlPaso(dbConn *sql.DB) {
+
+	query := `
+		select id,date
+		from alpaso`
+
+	rows, err := dbConn.Query(query)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var alpasos []AlPaso = make([]AlPaso, 0)
+	for rows.Next() {
+		var alpaso AlPaso
+		err := rows.Scan(&alpaso.Id, &alpaso.Date)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		alpasos = append(alpasos, alpaso)
+	}
+
+	fmt.Printf("items: %+v\n", alpasos)
 }
