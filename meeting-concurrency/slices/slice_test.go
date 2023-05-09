@@ -1,16 +1,69 @@
 package slices
 
 import (
+	"fmt"
 	"math/rand"
 	"testing"
 )
 
-//go test -v ./slices
+func TestRotareRightWorks(t *testing.T) {
+	str := "ABC"
+	expected := "CAB"
+	generated := RotateRight(str)
+	if generated != expected {
+		t.Errorf("No son iguales, generated: %s, expected: %s", generated, expected)
+	}
 
-func TestDesignedForFail(t *testing.T) {
-	t.Errorf("Estoy fallandoo")
+	str = "ABCD"
+	expected = "DABC"
+	generated = RotateRight(str)
+	if generated != expected {
+		t.Errorf("No son iguales, generated: %s, expected: %s", generated, expected)
+	}
+
+	str = "MNO"
+	expected = "OMN"
+	generated = RotateRight(str)
+	fmt.Println(str, generated)
+	if generated != expected {
+		t.Errorf("No son iguales, generated: %s, expected: %s", generated, expected)
+	}
 }
 
+func TestRotareRightWorksTDT(t *testing.T) {
+	type Test struct {
+		input    string
+		expected string
+	}
+
+	var tests []Test = []Test{
+		{
+			input:    "ABC",
+			expected: "CAB",
+		},
+		{
+			input:    "MNO",
+			expected: "OMN",
+		},
+		{
+			input:    "xyza",
+			expected: "axyz",
+		},
+	}
+
+	for _, test := range tests {
+		generated := RotateRight(test.input)
+		if generated != test.expected {
+			t.Errorf("No son iguales, generated: %s, expected: %s", generated, test.expected)
+		}
+	}
+}
+
+//go test -v ./slices
+/*
+func TestDesignedForFail(t *testing.T) {
+	t.Errorf("Estoy fallandoo")
+}*/
 func TestSumsWork(t *testing.T) {
 
 	testRuns := []struct {

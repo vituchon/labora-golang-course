@@ -6,14 +6,23 @@ import (
 	"os"
 	"strconv"
 	"sync"
+
+	"github.com/vituchon/labora-golang-course/meeting-concurrency/slices"
 )
 
 func main() {
+	// ABCD
+	// DABC
 
 	// primero solo descomenten executionWithoutConcurrency y corranlo
 	//executionWithoutConcurrency()
 	// luego solo descomenten executionWithConcurrency y sientan la concurrencia en su salsa!
-	executionWithConcurrency()
+	//executionWithConcurrency()
+
+	for true {
+		str := getStringFromStdin()
+		fmt.Println(str, ", rotate right:", slices.RotateRight(str)) //, ", rotate left:", slices.RotateLeft(str))
+	}
 
 	/*fmt.Println("Sin concurrencia")
 	longRunningTasksWithoutConcurrency()
@@ -71,10 +80,24 @@ func doAnExpensiveSum() int {
 	return ac
 }
 
+func getStringFromStdin() string {
+	scanner := bufio.NewScanner(os.Stdin)
+	for true {
+		fmt.Println("Enter valid string (or press CTR+D abort):")
+		hasInput := scanner.Scan()
+		if !hasInput {
+			break
+		}
+		text := scanner.Text()
+		return text
+	}
+	return ""
+}
+
 func getNumberFromStdin() int {
 	scanner := bufio.NewScanner(os.Stdin)
 	for true {
-		fmt.Println("Enter valid number (or press CTR+D abort):")
+		fmt.Println("Enter valid string (or press CTR+D abort):")
 		hasInput := scanner.Scan()
 		if !hasInput {
 			break
