@@ -5,6 +5,12 @@ import (
 	"testing"
 )
 
+//go test -v ./slices
+
+func TestDesignedForFail(t *testing.T) {
+	t.Errorf("Estoy fallandoo")
+}
+
 func TestSumsWork(t *testing.T) {
 
 	testRuns := []struct {
@@ -38,7 +44,12 @@ func TestSumsWork(t *testing.T) {
 }
 
 // para correr los benchmark
-// $slices/go test -benchmem -run=^$ -bench=BenchmarkSum*  github.com/vituchon/labora-golang-course/meeting-concurrency/slices
+// $slices/go test -benchmem -bench . github.com/vituchon/labora-golang-course/meeting-concurrency/slices
+// $slices/go test -bench .  ./slices // todos los benchs
+// $slices/go test -bench=BenchmarkSumUsingChannel ./slices // los que sigan el patron
+// se puede agregar flag -run=none (para que no ejecute tests!) => slices/go test -run=none  -bench .  ./slices
+// https://apuntes.de/golang/pruebas-benchmark/#gsc.tab=0
+// https://www.golinuxcloud.com/golang-benchmark/
 
 var slice = rand.Perm(10000000)
 
