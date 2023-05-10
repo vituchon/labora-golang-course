@@ -25,7 +25,7 @@ func sumInChannel(s []int, c chan int) {
 	c <- sum // send sum to c
 }
 
-func RotateRight(text string) string {
+func RotateRight(text string) string { // graphical idea: https://jamboard.google.com/d/1h5aAO-wiPI3TO5QIChnGQEaAPlT8dU79k3ZFckh2NW8/viewer?mtt=v7wp3cnbz3an&f=0
 	size := len(text)
 	rotatedText := ""
 	for fromIndex := range text {
