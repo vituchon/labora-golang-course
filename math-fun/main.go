@@ -25,8 +25,8 @@ func IsPerfect(x uint) bool {
 // funcion auxiliar para sumar todos los elementos de slice de enteros (reducir el slice a un número via suma matemática)
 func sumIntSlice(ints []uint) uint {
 	var ac uint = 0
-	for _, i := range ints {
-		ac += i
+	for _, value := range ints {
+		ac += value
 	}
 	return ac
 }
