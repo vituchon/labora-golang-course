@@ -1,0 +1,183 @@
+
+public interface Peleador {
+	public void recibirAtaque(int intensidad);
+
+	public int atacar();
+
+	public boolean estaVivo();
+
+	public int getVida();
+
+	public String quienSoy();
+}
+
+
+
+import java.util.Date;
+import java.util.Random;
+
+// así podes referenciar todos las clases que están en paquete model
+import Model.Ladron;
+import Model.Peleador;
+import Model.Policia;
+import Model.SerVivo;
+import Model.SuperLadron;
+
+public class Main {
+
+	public static void main(String[] args) {
+
+		Date date = new Date();
+		long milisDespuesdel1970 = date.getTime();
+		System.out.println(milisDespuesdel1970);
+
+		Peleador[] peleadores = new Peleador[2];
+
+		Policia policia = new Policia("sargento garcia");
+
+		Random r = new Random(); // instancio un Objetito que tiene implementado el comportamiento del "azar", detrás de la interfaz hay secuencias pseudoaletorias
+
+		int valorAlAzarEntre0y1 = r.nextInt(2);
+		boolean elegirSuperLadron = (1 == valorAlAzarEntre0y1); // 50 y 50... un poco cruel para la yuta... pensá en si vas a una confrontación con el 50% de ganar... mmmMMMM...  ;/
+		peleadores[0] =  policia;
+		if (elegirSuperLadron) {
+			peleadores[1] =  new SuperLadron("Robin HUD");
+		} else {
+			peleadores[1] =  new Ladron("Cholo");
+		}
+
+		peleadores[1] =  new SuperLadron("Robin HUD");
+		System.out.println(peleadores[1].quienSoy());
+
+
+		int indexPrimero = r.nextInt(2); // indexPrimero vale 0 o vale 1
+		int indexSegundo = (indexPrimero + 1) % 2; // si indexPrimero vale 0, entonces indexSegundo vale 1, si en camio indexPrimero vale 1 entonces indexSegundo vale 0 ;) No es siempre un incremento!
+
+		SerVivo serVivo = policia;
+
+		serVivo.hablar();
+
+		boolean estanVivosLosDos = true;
+		while (estanVivosLosDos) {
+			int intensidadAtaque;
+
+			Peleador primerPeleador = peleadores[indexPrimero];
+			intensidadAtaque = primerPeleador.atacar();
+			System.out.println(peleadores[indexPrimero].quienSoy() + " va a atacar " + peleadores[indexSegundo].quienSoy()+ " con intensidad de ataque " + intensidadAtaque);
+			peleadores[indexSegundo].recibirAtaque(intensidadAtaque);
+			System.out.println(peleadores[indexSegundo].quienSoy()  + " me quedo con " + peleadores[indexSegundo].getVida());
+
+			intensidadAtaque = peleadores[indexSegundo].atacar();
+			System.out.println(peleadores[indexSegundo].quienSoy() + " va a atacar " + peleadores[indexPrimero].quienSoy() + " con intensidad de ataque " + intensidadAtaque);
+			peleadores[indexPrimero].recibirAtaque(intensidadAtaque);
+			System.out.println(peleadores[indexPrimero].quienSoy()  + " me quedo con " + peleadores[indexPrimero].getVida());
+
+			estanVivosLosDos = peleadores[indexPrimero].estaVivo() && peleadores[indexSegundo].estaVivo();
+			System.out.println("");
+		}
+
+		if (peleadores[indexPrimero].estaVivo()) {
+			System.out.println("Gano el " + peleadores[indexPrimero].quienSoy());
+		} else {
+			System.out.println("Gano el " + peleadores[indexSegundo].quienSoy());
+		}
+	}
+}
+
+
+import java.util.Random;
+
+import Model.Ladron;
+import Model.Peleador;
+import Model.Policia;
+
+public class Main2 {
+
+	public static void main(String[] args) {
+
+
+
+
+
+		System.out.println(0.2+0.1);
+		System.exit(0);
+
+
+
+
+
+		Policia policia;
+		Ladron ladron;
+
+		policia = new Policia("pepe");
+		ladron = new Ladron("pepo");
+
+		Peleador[] contrincantes = new Peleador[2];
+
+		Random r = new Random();
+		int valor = r.nextInt(2); // 0..1
+		if (valor == 0) {
+			contrincantes[0] = policia;
+			contrincantes[1] = ladron;
+		} else {
+			contrincantes[0] = ladron;
+			contrincantes[1] = policia;
+		}
+
+		boolean estanVivosLosDos = true;
+		while (estanVivosLosDos) {
+
+			int intensidadAtaquePolicia = policia.atacar();
+			System.out.println("El policia ataca al ladron con intensidad igual a: " + intensidadAtaquePolicia);
+			ladron.recibirAtaque(intensidadAtaquePolicia);
+			System.out.println("El ladron recibe impacto y queda: " + ladron.getVida());
+
+			int intesidadAtaqueLadron = ladron.atacar();
+			System.out.println("El ladrón ataca al policia con intensidad igual a: " + intesidadAtaqueLadron);
+			policia.recibirAtaque(intesidadAtaqueLadron);
+			System.out.println("El policia recibe impacto y queda: " + policia.getVida());
+
+			estanVivosLosDos = policia.estaVivo() && ladron.estaVivo();
+		}
+
+		if (policia.estaVivo()) {
+			System.out.println("Gano el policia");
+		} else {
+			System.out.println("Gano el ladron");
+		}
+	}
+}
+
+
+public abstract class SerVivo extends Object { // Madre, SuperClase, Base
+	protected int vida;
+	private String tipoDeSerVivo;
+	private String nombre;
+	public int edad;
+
+	public SerVivo(int vida, String tipoDeSerVivo, String nombre) {
+		this.vida = vida;
+		this.tipoDeSerVivo = tipoDeSerVivo;
+		this.nombre = nombre;
+	}
+
+	public boolean estaVivo() {
+		return this.vida > 0;
+	}
+
+	public int getVida() {
+		return vida;
+	}
+
+	public String quienSoy() {
+		return this.tipoDeSerVivo + ", " + this.nombre;
+	}
+
+	public String hablar() {
+		return "hola";
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+}
