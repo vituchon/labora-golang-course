@@ -1,9 +1,10 @@
 package main
 
 // primera cosita que hago!
-func DetermineDivisors(x int) []int {
-	divisors := []int{}
-	for i := 1; i < x; i++ {
+func DetermineDivisors(x uint) []uint {
+	divisors := []uint{}
+	var i uint
+	for i = 1; i < x; i++ {
 		isDivisor := x%i == 0
 		if isDivisor {
 			divisors = append(divisors, i)
@@ -13,8 +14,8 @@ func DetermineDivisors(x int) []int {
 }
 
 // segunda cosa que se apoya en la primera!!
-func IsPerfect(x int) bool {
-	if x <= 0 { // por definición tiene que ser un entero positivo (mayor a cero), ver https://en.wikipedia.org/wiki/Perfect_number
+func IsPerfect(x uint) bool {
+	if x == 0 { // por definición tiene que ser un entero positivo (mayor a cero), ver https://en.wikipedia.org/wiki/Perfect_number
 		return false
 	}
 	divisors := DetermineDivisors(x)
@@ -22,8 +23,8 @@ func IsPerfect(x int) bool {
 }
 
 // funcion auxiliar para sumar todos los elementos de slice de enteros (reducir el slice a un número via suma matemática)
-func sumIntSlice(ints []int) int {
-	ac := 0
+func sumIntSlice(ints []uint) uint {
+	var ac uint = 0
 	for _, i := range ints {
 		ac += i
 	}
@@ -31,8 +32,8 @@ func sumIntSlice(ints []int) int {
 }
 
 // tercera cosa que se apoya tmb en la primera
-func AreFriends(x int, y int) bool {
-	if x <= 0 || y <= 0 { // por definición tiene que ser un entero positivo (mayor a cero), ver https://en.wikipedia.org/wiki/Amicable_numbers
+func AreFriends(x uint, y uint) bool {
+	if x == 0 || y == 0 { // por definición tiene que ser un entero positivo (mayor a cero), ver https://en.wikipedia.org/wiki/Amicable_numbers
 		return false
 	}
 	xDivisors := DetermineDivisors(x)

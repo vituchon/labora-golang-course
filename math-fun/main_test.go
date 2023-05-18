@@ -7,30 +7,30 @@ import (
 
 func TestDetermineDivisorsWorks(t *testing.T) {
 	type Test struct {
-		input    int
-		expected []int
+		input    uint
+		expected []uint
 	}
 
 	tests := []Test{
 		Test{
 			input:    0,
-			expected: []int{},
+			expected: []uint{},
 		},
 		Test{
 			input:    1,
-			expected: []int{},
+			expected: []uint{},
 		},
 		Test{
 			input:    2,
-			expected: []int{1},
+			expected: []uint{1},
 		},
 		Test{
 			input:    6,
-			expected: []int{1, 2, 3},
+			expected: []uint{1, 2, 3},
 		},
 		Test{
 			input:    10,
-			expected: []int{1, 2, 5},
+			expected: []uint{1, 2, 5},
 		},
 	}
 	for _, test := range tests {
@@ -43,7 +43,7 @@ func TestDetermineDivisorsWorks(t *testing.T) {
 
 func TestIfPerfectWorks(t *testing.T) {
 	type Test struct {
-		input    int
+		input    uint
 		expected bool
 	}
 
@@ -87,8 +87,8 @@ func TestIfPerfectWorks(t *testing.T) {
 
 func TestAreFriendsWorks(t *testing.T) {
 	type Input struct {
-		x int
-		y int
+		x uint
+		y uint
 	}
 	type Test struct {
 		input    Input
