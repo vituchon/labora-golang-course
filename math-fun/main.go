@@ -13,7 +13,7 @@ func DetermineDivisors(x int) []int {
 }
 
 // segunda cosa que se apoya en la primera!!
-func isPerfect(x int) bool {
+func IsPerfect(x int) bool {
 	if x <= 0 { // por definición tiene que ser un entero positivo (mayor a cero), ver https://en.wikipedia.org/wiki/Perfect_number
 		return false
 	}

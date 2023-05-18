@@ -78,7 +78,7 @@ func TestIfPerfectWorks(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		generated := isPerfect(test.input)
+		generated := IsPerfect(test.input)
 		if test.expected != generated {
 			t.Errorf("isPerfect Fails. Input=%v, Generated=%v, Expected=%v", test.input, generated, test.expected)
 		}
