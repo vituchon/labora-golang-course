@@ -20,7 +20,7 @@ func (p *Police) RecieveAttack(intensity int) {
 			intensity = 0
 		} else {
 			p.Armour = 0
-			intensity = -diff
+			intensity = -diff // intensity -= p.Armour
 		}
 	}
 	p.Life -= intensity
