@@ -40,3 +40,10 @@ func AreFriends(x uint, y uint) bool {
 	yDivisors := DetermineDivisors(y)
 	return sumIntSlice(xDivisors) == y && sumIntSlice(yDivisors) == x
 }
+
+func Abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
