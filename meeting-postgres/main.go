@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"time"
 
 	"github.com/lib/pq"
 	_ "github.com/lib/pq"
@@ -18,16 +17,48 @@ const (
 	rolPassword = "postgres"
 )
 
+type DbHandler struct {
+	conn      *sql.DB
+	openError error
+}
+
+func establishDbConnection_2() DbHandler {
+	var dbHandler DbHandler = DbHandler{}
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, rolName, rolPassword, dbName)
+	dbHandler.conn, dbHandler.openError = sql.Open("postgres", psqlInfo)
+	return dbHandler
+}
+
+var dbHandler DbHandler
+var Conn *sql.DB
+
+var Db *sql.DB
+
+func init() {
+	fmt.Println("init main.go")
+	var err error
+	Db, err = establishDbConnection()
+	if err != nil {
+		fmt.Println("Error inicializando la base de datos:", err)
+	}
+}
+
+func establishDbConnection() (*sql.DB, error) {
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, rolName, rolPassword, dbName)
+	dbConn, err := sql.Open("postgres", psqlInfo)
+	return dbConn, err
+}
+
 func main() {
-	dbConn, err := establishDbConnection()
-	fmt.Println("establishDbConnection dbConn:", dbConn, ",err:", err)
+	/*dbConn, err := establishDbConnection()
+	fmt.Println("establishDbConnection dbConn:", dbConn, ",err:", err)*/
 
 	/*_ , err = dbConn.Exec(`INSERT into items(code, customer_name, order_date, product, quantity, price) values
 												(124, 'pedro', 1683211111, 'fideos con tuco', '20', 600)`)
 	fmt.Println("INSERT err:", err)*/
 	//QueryRow
 
-	now := time.Now()
+	/*now := time.Now()
 	fmt.Println(now, now.Unix())
 
 	var id int
@@ -37,24 +68,18 @@ func main() {
 	fmt.Println("INSERT err:", err, ", id:", id)
 
 	_, err = dbConn.Exec("UPDATE items set product = 'polenta' where id = 1;")
-	fmt.Println("UPDATE err:", err)
+	fmt.Println("UPDATE err:", err)*/
 
-	printAllItems(dbConn)
-	printAllAlPaso(dbConn)
+	printAllItems()
+	//printAllAlPaso(dbConn)
 }
 
-func establishDbConnection() (*sql.DB, error) {
-	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, rolName, rolPassword, dbName)
-	dbConn, err := sql.Open("postgres", psqlInfo)
-	return dbConn, err
-}
-
-func printAllItems(dbConn *sql.DB) {
+func printAllItems() {
 	query := `
 		select id, code, customer_name, order_date, product, quantity, price
 		from items`
 
-	rows, err := dbConn.Query(query)
+	rows, err := dbHandler.conn.Query(query)
 	if err != nil {
 		fmt.Println(err)
 		return
