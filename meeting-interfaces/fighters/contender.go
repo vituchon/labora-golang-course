@@ -5,4 +5,5 @@ type Contender interface {
 	RecieveAttack(intensity int)
 	IsAlive() bool
 	GetName() string
+	GetLife() int
 }

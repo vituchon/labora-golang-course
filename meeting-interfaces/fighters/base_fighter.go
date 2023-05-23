@@ -7,3 +7,7 @@ type BaseFighter struct {
 func (bf BaseFighter) IsAlive() bool {
 	return bf.Life > 0
 }
+
+func (bf BaseFighter) GetLife() int {
+	return bf.Life
+}
