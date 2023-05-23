@@ -9,6 +9,34 @@ import (
 )
 
 func main() {
+	var contenders []fighters.Contender = buildContenders()
+	var areBothAlive = areAllContendersAlive(contenders)
+	for areBothAlive {
+		intensity := contenders[0].ThrowAttack()
+		fmt.Println(contenders[0].GetName(), " tira golpe con intensidad =", intensity)
+		contenders[1].RecieveAttack(intensity)
+
+		if contenders[1].IsAlive() {
+			intensity := contenders[1].ThrowAttack()
+			fmt.Println(contenders[1].GetName(), " tira golpe con intensidad =", intensity)
+			contenders[0].RecieveAttack(intensity)
+		}
+
+		fmt.Printf("%sLife=%d, %sLife=%d\n", contenders[0].GetName(), contenders[0].GetLife(), contenders[1].GetName(), contenders[1].GetLife())
+		areBothAlive = areAllContendersAlive(contenders)
+		time.Sleep(3 * time.Second)
+	}
+}
+
+func areAllContendersAlive(contenders []fighters.Contender) bool {
+	size := len(contenders)
+	var i int = 0
+	for i = 0; i < size && contenders[i].IsAlive(); i++ {
+	}
+	return i == size
+}
+
+func buildContenders() []fighters.Contender {
 	var police fighters.Police = fighters.Police{
 		BaseFighter: fighters.BaseFighter{
 			Life: 10,
@@ -25,24 +53,7 @@ func main() {
 	randomValueBetweenOneAndZero := rand.Intn(2)
 	contenders[randomValueBetweenOneAndZero] = &police
 	contenders[(randomValueBetweenOneAndZero+1)%2] = &criminal
-
-	var areBothAlive = police.IsAlive() && criminal.IsAlive()
-	for areBothAlive {
-
-		intensity := contenders[0].ThrowAttack()
-		fmt.Println(contenders[0].GetName(), " tira golpe con intensidad =", intensity)
-		contenders[1].RecieveAttack(intensity)
-
-		if contenders[1].IsAlive() {
-			intensity := contenders[1].ThrowAttack()
-			fmt.Println(contenders[1].GetName(), " tira golpe con intensidad =", intensity)
-			contenders[0].RecieveAttack(intensity)
-		}
-
-		fmt.Printf("PoliceLife=%d, CriminalLife=%d\n", police.Life, criminal.Life)
-		areBothAlive = police.IsAlive() && criminal.IsAlive()
-		time.Sleep(3 * time.Second)
-	}
+	return contenders
 }
 
 func main_legacy() {
