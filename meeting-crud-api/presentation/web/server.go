@@ -6,7 +6,6 @@ package web
 import (
 	"fmt"
 	"net/http"
-	_ "net/http/pprof"
 	"os"
 	"time"
 
