@@ -8,25 +8,25 @@ import (
 )
 
 type AnimalStorage struct {
-	gamesById  map[int]model.Animal
-	idSequence int
-	mutex      sync.Mutex
+	animalsById map[int]model.Animal
+	idSequence  int
+	mutex       sync.Mutex
 }
 
 func NewAnimalsStorage() *AnimalStorage {
-	return &AnimalStorage{gamesById: make(map[int]model.Animal), idSequence: 0}
+	return &AnimalStorage{animalsById: make(map[int]model.Animal), idSequence: 0}
 }
 
 func (repo *AnimalStorage) GetAll() ([]model.Animal, error) {
-	games := make([]model.Animal, 0, len(repo.gamesById))
-	for _, animal := range repo.gamesById {
-		games = append(games, animal)
+	animals := make([]model.Animal, 0, len(repo.animalsById))
+	for _, animal := range repo.animalsById {
+		animals = append(animals, animal)
 	}
-	return games, nil
+	return animals, nil
 }
 
 func (repo *AnimalStorage) GetById(id int) (*model.Animal, error) {
-	animal, exists := repo.gamesById[id]
+	animal, exists := repo.animalsById[id]
 	if !exists {
 		return nil, repositories.EntityNotExistsErr
 	}
@@ -40,8 +40,8 @@ func (repo *AnimalStorage) Create(animal model.Animal) (created *model.Animal, e
 	repo.mutex.Lock()
 	nextId := repo.idSequence + 1
 	animal.Id = &nextId
-	repo.gamesById[nextId] = animal
-	repo.idSequence++ // can not reference idSequence as each update would increment all the games Id by id (thus all will be the same)
+	repo.animalsById[nextId] = animal
+	repo.idSequence++ // can not reference idSequence as each update would increment all the animals Id by id (thus all will be the same)
 	repo.mutex.Unlock()
 	return &animal, nil
 }
@@ -50,11 +50,11 @@ func (repo *AnimalStorage) Update(animal model.Animal) (updated *model.Animal, e
 	if animal.Id == nil {
 		return nil, repositories.EntityNotExistsErr
 	}
-	repo.gamesById[*animal.Id] = animal
+	repo.animalsById[*animal.Id] = animal
 	return &animal, nil
 }
 
 func (repo *AnimalStorage) Delete(id int) error {
-	delete(repo.gamesById, id)
+	delete(repo.animalsById, id)
 	return nil
 }
