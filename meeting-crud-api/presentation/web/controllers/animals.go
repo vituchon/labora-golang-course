@@ -21,8 +21,6 @@ func init() {
 	animalsRepository = postgres.NewAnimalsStorage()
 }
 
-// PLAYERS
-
 func GetAnimals(response http.ResponseWriter, request *http.Request) {
 	animals, err := animalsRepository.GetAll()
 	if err != nil {
