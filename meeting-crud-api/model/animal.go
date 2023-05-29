@@ -1,11 +1,27 @@
 package model
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Animal struct {
 	Id   *int       `json:"id"`
 	Kind AnimalKind `json:"kind"`
 	Name string     `json:"name"`
+}
+
+func (a Animal) String() string {
+	var idField string = "\"Id\": nil "
+	if a.Id != nil {
+		idField = fmt.Sprintf("\"Id\": %d ", *a.Id)
+	}
+
+	var kindField = fmt.Sprintf("\"Kind\": %v ", a.Kind)
+	var NameField = fmt.Sprintf("\"Name\": %v ", a.Name)
+
+	str := strings.Join([]string{idField, kindField, NameField}, ",")
+	return "{" + str + "}"
 }
 
 type AnimalKind int // Discuss: Podria ser Kind si el paquete fuera animal, pues quedaría animal.Kind al usars desde OTRO paquete... sin embargo como es model, creo que esta OK poner que el Kind se refiere a un animal. Pues el paquete model tiene modelizadas otra entidades que no están
