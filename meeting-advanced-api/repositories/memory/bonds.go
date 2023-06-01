@@ -5,6 +5,7 @@ import (
 
 	"github.com/vituchon/labora-golang-course/meeting-advanced-api/model"
 	"github.com/vituchon/labora-golang-course/meeting-advanced-api/repositories"
+	"github.com/vituchon/labora-golang-course/meeting-advanced-api/util"
 )
 
 type BondsStorage struct {
@@ -31,6 +32,16 @@ func (repo *BondsStorage) GetById(id int) (*model.Bond, error) {
 		return nil, repositories.EntityNotExistsErr
 	}
 	return &bond, nil
+}
+
+func (repo *BondsStorage) GetBondsOf(personsId []int) ([]model.Bond, error) {
+	bonds := []model.Bond{}
+	for _, bond := range repo.bondsById {
+		if util.ContainsInt(personsId, *bond.Id) {
+			bonds = append(bonds, bond)
+		}
+	}
+	return bonds, nil
 }
 
 func (repo *BondsStorage) Create(bond model.Bond) (created *model.Bond, err error) {
