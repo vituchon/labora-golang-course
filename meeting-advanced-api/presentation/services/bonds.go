@@ -19,14 +19,14 @@ func GetBondsByPersonIds(ids []int) ([]Bond, error) {
 		return nil, errors.New(errMsg)
 	}
 
-	animalsIds := make([]int, 0, len(bonds))
+	animalIds := make([]int, 0, len(bonds))
 	personIds := make([]int, 0, len(bonds))
 	for _, bond := range bonds {
-		animalsIds = append(animalsIds, *&bond.AnimalId)
+		animalIds = append(animalIds, *&bond.AnimalId)
 		personIds = append(personIds, *&bond.PersonId)
 	}
 
-	animals, err := animalsRepository.GetByIds(animalsIds)
+	animals, err := animalsRepository.GetByIds(animalIds)
 	if err != nil {
 		errMsg := fmt.Sprintf("error while animals : '%v'", err)
 		fmt.Println(errMsg)
