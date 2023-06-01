@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"github.com/lib/pq"
 	"github.com/vituchon/labora-golang-course/meeting-advanced-api/model"
 	"github.com/vituchon/labora-golang-course/meeting-advanced-api/repositories"
 )
@@ -41,6 +42,30 @@ func (repo *AnimalsStorage) GetById(id int) (*model.Animal, error) {
 		FROM animal
 		WHERE id = $1`, id)
 	return scanAnimal(row)
+}
+
+func (repo *AnimalsStorage) GetByIds(ids []int) ([]model.Animal, error) {
+	rows, err := Conn.Query(`
+		SELECT id, name, kind
+		FROM animal
+		WHERE id = ANY($1)`, pq.Array(ids))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	animals := []model.Animal{}
+	for rows.Next() {
+		animalPtr, err := scanAnimal(rows)
+		if err != nil {
+			return nil, err
+		}
+		animals = append(animals, *animalPtr)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+	return animals, nil
 }
 
 func (repo *AnimalsStorage) Create(animal model.Animal) (*model.Animal, error) {
