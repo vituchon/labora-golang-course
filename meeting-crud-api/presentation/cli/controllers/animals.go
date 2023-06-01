@@ -81,7 +81,7 @@ func CreateAnimal(input io.Reader, output io.Writer) {
 }
 
 func UpdateAnimal(input io.Reader, output io.Writer) {
-	// TODO : Deberia pedir primero el ID y validar que exista.... luego opcionalmente (decisión de diseño UI/UX, pero en una CLI en vez de una GUI) si el ID es válido se puede recuperar el animal y mostrar los valores actuales (o proporcionar un mecanismo para no tener que volver a introducirlos...)
+	// TODO : Deberia pedir primero el ID y validar que exista.... luego opcionalmente (decisión de diseño UI/UX, pero en una CLI en vez de una GUI	) si el ID es válido se puede recuperar el animal y mostrar los valores actuales (o proporcionar un mecanismo para no tener que volver a introducirlos...)
 	output.Write([]byte("Ingrese Nombre: "))
 	enteredName, err := GetTextFrom(input)
 	if err != nil {
