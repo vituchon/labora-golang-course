@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -27,12 +28,26 @@ func GetBondsByPersonsIds(response http.ResponseWriter, request *http.Request) {
 		http.Error(response, err.Error(), http.StatusBadRequest)
 	}
 
+	bonds, err := DoGetBondsByPersonsIds(ids)
+	if err != nil {
+		fmt.Println(err.Error())
+		http.Error(response, err.Error(), http.StatusInternalServerError)
+	}
+
+	WriteJsonResponse(response, http.StatusOK, bonds)
+}
+
+type BondDTO struct {
+	Person model.Person
+	Animal model.Animal
+}
+
+func DoGetBondsByPersonsIds(ids []int) ([]BondDTO, error) {
+
 	bonds, err := bondsRepository.GetBondsOf(ids)
 	if err != nil {
 		errMsg := fmt.Sprintf("error while bonds animals : '%v'", err)
-		fmt.Println(errMsg)
-		http.Error(response, errMsg, http.StatusInternalServerError)
-		return
+		return nil, errors.New(errMsg)
 	}
 
 	animalsIds := make([]int, 0, len(bonds))
@@ -46,21 +61,14 @@ func GetBondsByPersonsIds(response http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		errMsg := fmt.Sprintf("error while animals : '%v'", err)
 		fmt.Println(errMsg)
-		http.Error(response, errMsg, http.StatusInternalServerError)
-		return
+		return nil, errors.New(errMsg)
 	}
 
 	persons, err := personRepository.GetByIds(personIds)
 	if err != nil {
 		errMsg := fmt.Sprintf("error while persons : '%v'", err)
 		fmt.Println(errMsg)
-		http.Error(response, errMsg, http.StatusInternalServerError)
-		return
-	}
-
-	type BondDTO struct {
-		Person model.Person
-		Animal model.Animal
+		return nil, errors.New(errMsg)
 	}
 
 	var bondsDTO []BondDTO = make([]BondDTO, 0, len(bonds))
@@ -91,6 +99,5 @@ func GetBondsByPersonsIds(response http.ResponseWriter, request *http.Request) {
 			bondsDTO = append(bondsDTO, bondDTO)
 		}
 	}
-
-	WriteJsonResponse(response, http.StatusOK, bondsDTO)
+	return bondsDTO, nil
 }
