@@ -13,13 +13,13 @@ type AnimalsStorage struct {
 	mutex       sync.Mutex
 }
 
-var instance *AnimalsStorage
+var animalsStorageInstance *AnimalsStorage = nil
 
 func NewAnimalsStorage() *AnimalsStorage {
-	if instance == nil {
-		instance = &AnimalsStorage{animalsById: make(map[int]model.Animal), idSequence: 0}
+	if animalsStorageInstance == nil {
+		animalsStorageInstance = &AnimalsStorage{animalsById: make(map[int]model.Animal), idSequence: 0}
 	}
-	return instance
+	return animalsStorageInstance
 }
 
 func (repo *AnimalsStorage) GetAll() ([]model.Animal, error) {
@@ -36,6 +36,18 @@ func (repo *AnimalsStorage) GetById(id int) (*model.Animal, error) {
 		return nil, repositories.EntityNotExistsErr
 	}
 	return &animal, nil
+}
+
+func (repo *AnimalsStorage) GetByIds(ids []int) ([]model.Animal, error) {
+	var animals []model.Animal = make([]model.Animal, 0, len(ids))
+	for _, id := range ids {
+		animal, exists := repo.animalsById[id]
+		if exists {
+			animals = append(animals, animal)
+		}
+	}
+
+	return animals, nil
 }
 
 func (repo *AnimalsStorage) Create(animal model.Animal) (created *model.Animal, err error) {

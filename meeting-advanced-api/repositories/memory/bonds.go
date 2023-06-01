@@ -14,8 +14,13 @@ type BondsStorage struct {
 	mutex      sync.Mutex
 }
 
+var bondsStorageInstance *BondsStorage = nil
+
 func NewBondsStorage() *BondsStorage {
-	return &BondsStorage{bondsById: make(map[int]model.Bond), idSequence: 0}
+	if bondsStorageInstance == nil {
+		bondsStorageInstance = &BondsStorage{bondsById: make(map[int]model.Bond), idSequence: 0}
+	}
+	return bondsStorageInstance
 }
 
 func (repo *BondsStorage) GetAll() ([]model.Bond, error) {
