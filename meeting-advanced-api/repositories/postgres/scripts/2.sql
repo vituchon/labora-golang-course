@@ -2,16 +2,31 @@
 
 DO $$
   DECLARE
-    animal_id INT;
-    person_id INT;
+    cat_names text[] =  ARRAY['Igui','Salem','Agatha','Luna','Kika','Zondo','Pampita'];
+  	cat_name text;
+	  cat_kind_value int = 0;
+
+	  person_names text[] =  ARRAY['Ale','Aru','Jeral','Ludmi','Mary','Poly','Rai','Sabri','Thali','Titita','Valen','Vitu'];
+	  person_name text;
+
+    sabri_person_id int;
+    cat_id int;
   BEGIN
-    INSERT INTO animal(name,kind) VALUES ('Kiki', 2);
-    INSERT INTO animal(name,kind) VALUES ('Samson', 1);
-    INSERT INTO animal(name,kind) VALUES ('Kronos', 0) returning id into animal_id;
 
-    INSERT INTO person(name) VALUES ('Sabri') returning id into person_id;
+  	FOREACH person_name IN ARRAY person_names
+	  LOOP
+		  INSERT INTO person (name) VALUES (person_name);
+	  END LOOP;
 
-    INSERT INTO bond(person_id, animal_id) VALUES (person_id, animal_id);
+    select id from person where name = 'Sabri' into sabri_person_id;
+
+    --raise notice 'sabri_person_id: %', sabri_person_id;
+
+	  FOREACH cat_name IN ARRAY cat_names
+	  LOOP
+		  INSERT INTO animal (name,kind) VALUES (cat_name,cat_kind_value) returning id into cat_id;
+		  INSERT INTO bond(person_id,animal_id) VALUES (sabri_person_id, cat_id);
+	  END LOOP;
+
   END
 $$;
-
