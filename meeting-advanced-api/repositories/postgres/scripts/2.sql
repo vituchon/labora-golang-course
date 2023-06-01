@@ -2,7 +2,7 @@
 
 DO $$
   DECLARE
-    cat_names text[] =  ARRAY['Igui','Salem','Agatha','Luna','Kika','Zondo','Pampita'];
+    cat_names text[] =  ARRAY['Beto','Coni','Malba','Mili' 'Chiquitina','Tamy','Pato'];
   	cat_name text;
 	  cat_kind_value int = 0;
 
