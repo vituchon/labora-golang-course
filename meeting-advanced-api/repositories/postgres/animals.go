@@ -12,7 +12,6 @@ func NewAnimalsStorage() *AnimalsStorage {
 	return &AnimalsStorage{}
 }
 
-// Gets all legal entities for a list of organizations
 func (repo *AnimalsStorage) GetAll() ([]model.Animal, error) {
 	rows, err := Conn.Query(`
 		SELECT id, name, kind
@@ -36,7 +35,6 @@ func (repo *AnimalsStorage) GetAll() ([]model.Animal, error) {
 	return animals, nil
 }
 
-// Gets an specific legal animal by id
 func (repo *AnimalsStorage) GetById(id int) (*model.Animal, error) {
 	row := Conn.QueryRow(`
 		SELECT id, name, kind
@@ -45,7 +43,6 @@ func (repo *AnimalsStorage) GetById(id int) (*model.Animal, error) {
 	return scanAnimal(row)
 }
 
-// Creates a legal animal
 func (repo *AnimalsStorage) Create(animal model.Animal) (*model.Animal, error) {
 	createQuery := `INSERT INTO animal (name, kind) VALUES ($1, $2) returning id`
 	err := Conn.QueryRow(createQuery, animal.Name, animal.Kind).Scan(&animal.Id)
@@ -55,7 +52,6 @@ func (repo *AnimalsStorage) Create(animal model.Animal) (*model.Animal, error) {
 	return &animal, nil
 }
 
-// Updates a legal animal (legal_id, session_id, name, is_default_biller)
 func (repo *AnimalsStorage) Update(animal model.Animal) (*model.Animal, error) {
 	if animal.Id == nil {
 		return nil, repositories.EntityNotExistsErr
