@@ -51,7 +51,7 @@ func buildRouter() *mux.Router {
 	apiPut("/animals/{id:[0-9]+}", controllers.UpdateAnimal)    //curl -X PUT http://localhost:9090/api/v1/animals/1 --data-binary '{ "Id": 1, "name" : "Koko", "kind": 0 }'
 	apiDelete("/animals/{id:[0-9]+}", controllers.DeleteAnimal) //curl -x DELETE http://localhost:9090/api/v1/animals/5
 
-	apiGet("/bonds/by-person-ids", controllers.GetBondsByPersonsIds)
+	apiGet("/bonds/by-person-ids", controllers.GetBondsByPersonIds)
 
 	return root
 }

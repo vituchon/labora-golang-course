@@ -12,7 +12,7 @@ type Bond struct {
 	Animal model.Animal
 }
 
-func GetBondsByPersonsIds(ids []int) ([]Bond, error) {
+func GetBondsByPersonIds(ids []int) ([]Bond, error) {
 	bonds, err := bondsRepository.GetBondsOf(ids)
 	if err != nil {
 		errMsg := fmt.Sprintf("error while bonds animals : '%v'", err)

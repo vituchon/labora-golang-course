@@ -20,14 +20,13 @@ func init() {
 	bondsRepository = postgres.NewBondsStorage()
 }
 
-// TODO rename to GetBondsByPersonIds (without s)
-func GetBondsByPersonsIds(response http.ResponseWriter, request *http.Request) {
+func GetBondsByPersonIds(response http.ResponseWriter, request *http.Request) {
 	ids, err := ParseQueryParamAsInts(request, "ids")
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusBadRequest)
 	}
 
-	bonds, err := services.GetBondsByPersonsIds(ids)
+	bonds, err := services.GetBondsByPersonIds(ids)
 	if err != nil {
 		fmt.Println(err.Error())
 		http.Error(response, err.Error(), http.StatusInternalServerError)
