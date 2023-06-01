@@ -120,6 +120,7 @@ func displayRetrieveMenu() {
 	fmt.Println("Seleccione un criterio (escriba un número del 1 al 2 y pulse ENTER) para recuperar")
 	fmt.Println("1 => Todos")
 	fmt.Println("2 => Por id")
+	fmt.Println("3 => Vinculos por ID de persona")
 }
 
 func performRetrieveOperation(number int) {
@@ -129,6 +130,9 @@ func performRetrieveOperation(number int) {
 		break
 	case 2:
 		controllers.GetAnimalById(os.Stdin, os.Stdout)
+		break
+	case 3:
+		controllers.GetBondsByPersonsIds(os.Stdin, os.Stdout)
 		break
 	default:
 		fmt.Printf("%d no es un opción invalida", number)
