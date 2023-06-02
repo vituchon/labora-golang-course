@@ -21,28 +21,28 @@ func (repo *BondsRepository) GetBondsOf(personsId []int) ([]model.Bond, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	relations := []model.Bond{}
+	bonds := []model.Bond{}
 	for rows.Next() {
-		relationPtr, err := scanBond(rows)
+		bondPtr, err := scanBond(rows)
 		if err != nil {
 			return nil, err
 		}
-		relations = append(relations, *relationPtr)
+		bonds = append(bonds, *bondPtr)
 	}
 	err = rows.Err()
 	if err != nil {
 		return nil, err
 	}
-	return relations, nil
+	return bonds, nil
 }
 
-// Scans a row interpreting it as 'model.Relation' struct
+// Scans a row interpreting it as 'model.Bond' struct
 func scanBond(rows RowScanner) (*model.Bond, error) {
-	var relation model.Bond
+	var bond model.Bond
 
-	err := rows.Scan(&relation.Id, &relation.PersonId, &relation.AnimalId)
+	err := rows.Scan(&bond.Id, &bond.PersonId, &bond.AnimalId)
 	if err != nil {
 		return nil, err
 	}
-	return &relation, nil
+	return &bond, nil
 }
