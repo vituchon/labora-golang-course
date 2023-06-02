@@ -10,7 +10,7 @@ var personRepository repositories.Persons
 var bondsRepository repositories.Bonds
 
 func init() {
-	animalsRepository = postgres.NewAnimalsStorage()
-	personRepository = postgres.NewPersonsStorage()
-	bondsRepository = postgres.NewBondsStorage()
+	animalsRepository = postgres.NewAnimalsRepository()
+	personRepository = postgres.NewPersonsRepository()
+	bondsRepository = postgres.NewBondsRepository()
 }

@@ -8,22 +8,22 @@ import (
 	"github.com/vituchon/labora-golang-course/meeting-advanced-api/util"
 )
 
-type BondsStorage struct {
+type BondsRepository struct {
 	bondsById  map[int]model.Bond
 	idSequence int
 	mutex      sync.Mutex
 }
 
-var bondsStorageInstance *BondsStorage = nil
+var bondsRepositoryInstance *BondsRepository = nil
 
-func NewBondsStorage() *BondsStorage {
-	if bondsStorageInstance == nil {
-		bondsStorageInstance = &BondsStorage{bondsById: make(map[int]model.Bond), idSequence: 0}
+func NewBondsRepository() *BondsRepository {
+	if bondsRepositoryInstance == nil {
+		bondsRepositoryInstance = &BondsRepository{bondsById: make(map[int]model.Bond), idSequence: 0}
 	}
-	return bondsStorageInstance
+	return bondsRepositoryInstance
 }
 
-func (repo *BondsStorage) GetAll() ([]model.Bond, error) {
+func (repo *BondsRepository) GetAll() ([]model.Bond, error) {
 	bonds := make([]model.Bond, 0, len(repo.bondsById))
 	for _, bond := range repo.bondsById {
 		bonds = append(bonds, bond)
@@ -31,7 +31,7 @@ func (repo *BondsStorage) GetAll() ([]model.Bond, error) {
 	return bonds, nil
 }
 
-func (repo *BondsStorage) GetById(id int) (*model.Bond, error) {
+func (repo *BondsRepository) GetById(id int) (*model.Bond, error) {
 	bond, exists := repo.bondsById[id]
 	if !exists {
 		return nil, repositories.EntityNotExistsErr
@@ -39,7 +39,7 @@ func (repo *BondsStorage) GetById(id int) (*model.Bond, error) {
 	return &bond, nil
 }
 
-func (repo *BondsStorage) GetBondsOf(personsId []int) ([]model.Bond, error) {
+func (repo *BondsRepository) GetBondsOf(personsId []int) ([]model.Bond, error) {
 	bonds := []model.Bond{}
 	for _, bond := range repo.bondsById {
 		if util.ContainsInt(personsId, *bond.Id) {
@@ -49,7 +49,7 @@ func (repo *BondsStorage) GetBondsOf(personsId []int) ([]model.Bond, error) {
 	return bonds, nil
 }
 
-func (repo *BondsStorage) Create(bond model.Bond) (created *model.Bond, err error) {
+func (repo *BondsRepository) Create(bond model.Bond) (created *model.Bond, err error) {
 	if bond.Id != nil {
 		return nil, repositories.DuplicatedEntityErr
 	}
@@ -62,7 +62,7 @@ func (repo *BondsStorage) Create(bond model.Bond) (created *model.Bond, err erro
 	return &bond, nil
 }
 
-func (repo *BondsStorage) Update(bond model.Bond) (updated *model.Bond, err error) {
+func (repo *BondsRepository) Update(bond model.Bond) (updated *model.Bond, err error) {
 	if bond.Id == nil {
 		return nil, repositories.EntityNotExistsErr
 	}
@@ -70,7 +70,7 @@ func (repo *BondsStorage) Update(bond model.Bond) (updated *model.Bond, err erro
 	return &bond, nil
 }
 
-func (repo *BondsStorage) Delete(id int) error {
+func (repo *BondsRepository) Delete(id int) error {
 	delete(repo.bondsById, id)
 	return nil
 }

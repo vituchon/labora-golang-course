@@ -7,22 +7,22 @@ import (
 	"github.com/vituchon/labora-golang-course/meeting-advanced-api/repositories"
 )
 
-type AnimalsStorage struct {
+type AnimalsRepository struct {
 	animalsById map[int]model.Animal
 	idSequence  int
 	mutex       sync.Mutex
 }
 
-var animalsStorageInstance *AnimalsStorage = nil
+var animalsRepositoryInstance *AnimalsRepository = nil
 
-func NewAnimalsStorage() *AnimalsStorage {
-	if animalsStorageInstance == nil {
-		animalsStorageInstance = &AnimalsStorage{animalsById: make(map[int]model.Animal), idSequence: 0}
+func NewAnimalsRepository() *AnimalsRepository {
+	if animalsRepositoryInstance == nil {
+		animalsRepositoryInstance = &AnimalsRepository{animalsById: make(map[int]model.Animal), idSequence: 0}
 	}
-	return animalsStorageInstance
+	return animalsRepositoryInstance
 }
 
-func (repo *AnimalsStorage) GetAll() ([]model.Animal, error) {
+func (repo *AnimalsRepository) GetAll() ([]model.Animal, error) {
 	animals := make([]model.Animal, 0, len(repo.animalsById))
 	for _, animal := range repo.animalsById {
 		animals = append(animals, animal)
@@ -30,7 +30,7 @@ func (repo *AnimalsStorage) GetAll() ([]model.Animal, error) {
 	return animals, nil
 }
 
-func (repo *AnimalsStorage) GetById(id int) (*model.Animal, error) {
+func (repo *AnimalsRepository) GetById(id int) (*model.Animal, error) {
 	animal, exists := repo.animalsById[id]
 	if !exists {
 		return nil, repositories.EntityNotExistsErr
@@ -38,7 +38,7 @@ func (repo *AnimalsStorage) GetById(id int) (*model.Animal, error) {
 	return &animal, nil
 }
 
-func (repo *AnimalsStorage) GetByIds(ids []int) ([]model.Animal, error) {
+func (repo *AnimalsRepository) GetByIds(ids []int) ([]model.Animal, error) {
 	var animals []model.Animal = make([]model.Animal, 0, len(ids))
 	for _, id := range ids {
 		animal, exists := repo.animalsById[id]
@@ -50,7 +50,7 @@ func (repo *AnimalsStorage) GetByIds(ids []int) ([]model.Animal, error) {
 	return animals, nil
 }
 
-func (repo *AnimalsStorage) Create(animal model.Animal) (created *model.Animal, err error) {
+func (repo *AnimalsRepository) Create(animal model.Animal) (created *model.Animal, err error) {
 	if animal.Id != nil {
 		return nil, repositories.DuplicatedEntityErr
 	}
@@ -63,7 +63,7 @@ func (repo *AnimalsStorage) Create(animal model.Animal) (created *model.Animal, 
 	return &animal, nil
 }
 
-func (repo *AnimalsStorage) Update(animal model.Animal) (updated *model.Animal, err error) {
+func (repo *AnimalsRepository) Update(animal model.Animal) (updated *model.Animal, err error) {
 	if animal.Id == nil {
 		return nil, repositories.EntityNotExistsErr
 	}
@@ -71,7 +71,7 @@ func (repo *AnimalsStorage) Update(animal model.Animal) (updated *model.Animal, 
 	return &animal, nil
 }
 
-func (repo *AnimalsStorage) Delete(id int) error {
+func (repo *AnimalsRepository) Delete(id int) error {
 	delete(repo.animalsById, id)
 	return nil
 }

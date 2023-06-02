@@ -20,14 +20,14 @@ var personRepository repositories.Persons
 func init() {
 	// INYECCION DE DEPEDENCIA (Repositorio en memoria o en base de datos)
 	// memoria
-	// animalsRepository = memory.NewAnimalsStorage()
-	// personRepository = memory.NewPersonsStorage()
-	// bondsRepository = memory.NewBondsStorage()
+	// animalsRepository = memory.NewAnimalsRepository()
+	// personRepository = memory.NewPersonsRepository()
+	// bondsRepository = memory.NewBondsRepository()
 
 	// base de datos (postgres)
-	animalsRepository = postgres.NewAnimalsStorage()
-	personRepository = postgres.NewPersonsStorage()
-	bondsRepository = postgres.NewBondsStorage()
+	animalsRepository = postgres.NewAnimalsRepository()
+	personRepository = postgres.NewPersonsRepository()
+	bondsRepository = postgres.NewBondsRepository()
 }
 
 func Healthcheck(response http.ResponseWriter, request *http.Request) {

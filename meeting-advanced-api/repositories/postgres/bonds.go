@@ -5,14 +5,14 @@ import (
 	"github.com/vituchon/labora-golang-course/meeting-advanced-api/model"
 )
 
-type BondsStorage struct {
+type BondsRepository struct {
 }
 
-func NewBondsStorage() *BondsStorage {
-	return &BondsStorage{}
+func NewBondsRepository() *BondsRepository {
+	return &BondsRepository{}
 }
 
-func (repo *BondsStorage) GetBondsOf(personsId []int) ([]model.Bond, error) {
+func (repo *BondsRepository) GetBondsOf(personsId []int) ([]model.Bond, error) {
 	rows, err := Conn.Query(`
 		SELECT id, person_id, animal_id
 		FROM bond

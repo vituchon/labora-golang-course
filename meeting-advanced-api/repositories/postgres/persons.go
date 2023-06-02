@@ -6,14 +6,14 @@ import (
 	"github.com/vituchon/labora-golang-course/meeting-advanced-api/repositories"
 )
 
-type PersonsStorage struct {
+type PersonsRepository struct {
 }
 
-func NewPersonsStorage() *PersonsStorage {
-	return &PersonsStorage{}
+func NewPersonsRepository() *PersonsRepository {
+	return &PersonsRepository{}
 }
 
-func (repo *PersonsStorage) GetAll() ([]model.Person, error) {
+func (repo *PersonsRepository) GetAll() ([]model.Person, error) {
 	rows, err := Conn.Query(`
 		SELECT id, name
 		FROM person`)
@@ -36,7 +36,7 @@ func (repo *PersonsStorage) GetAll() ([]model.Person, error) {
 	return persons, nil
 }
 
-func (repo *PersonsStorage) GetById(id int) (*model.Person, error) {
+func (repo *PersonsRepository) GetById(id int) (*model.Person, error) {
 	row := Conn.QueryRow(`
 		SELECT id, name
 		FROM person
@@ -44,7 +44,7 @@ func (repo *PersonsStorage) GetById(id int) (*model.Person, error) {
 	return scanPerson(row)
 }
 
-func (repo *PersonsStorage) GetByIds(ids []int) ([]model.Person, error) {
+func (repo *PersonsRepository) GetByIds(ids []int) ([]model.Person, error) {
 	rows, err := Conn.Query(`
 		SELECT id, name
 		FROM person
@@ -68,7 +68,7 @@ func (repo *PersonsStorage) GetByIds(ids []int) ([]model.Person, error) {
 	return persons, nil
 }
 
-func (repo *PersonsStorage) Create(person model.Person) (*model.Person, error) {
+func (repo *PersonsRepository) Create(person model.Person) (*model.Person, error) {
 	createQuery := `INSERT INTO person (name) VALUES ($1) returning id`
 	err := Conn.QueryRow(createQuery, person.Name).Scan(&person.Id)
 	if err != nil {
@@ -77,7 +77,7 @@ func (repo *PersonsStorage) Create(person model.Person) (*model.Person, error) {
 	return &person, nil
 }
 
-func (repo *PersonsStorage) Update(person model.Person) (*model.Person, error) {
+func (repo *PersonsRepository) Update(person model.Person) (*model.Person, error) {
 	if person.Id == nil {
 		return nil, repositories.EntityNotExistsErr
 	}
@@ -89,7 +89,7 @@ func (repo *PersonsStorage) Update(person model.Person) (*model.Person, error) {
 	return &person, nil
 }
 
-func (repo *PersonsStorage) Delete(id int) (err error) {
+func (repo *PersonsRepository) Delete(id int) (err error) {
 	deleteQuery := `DELETE FROM person WHERE id = $1`
 	_, err = Conn.Exec(deleteQuery, id)
 	return
