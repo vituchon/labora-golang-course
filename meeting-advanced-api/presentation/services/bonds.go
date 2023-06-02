@@ -4,7 +4,9 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/lib/pq"
 	"github.com/vituchon/labora-golang-course/meeting-advanced-api/model"
+	"github.com/vituchon/labora-golang-course/meeting-advanced-api/repositories/postgres"
 )
 
 type Bond struct {
@@ -12,7 +14,7 @@ type Bond struct {
 	Animal model.Animal
 }
 
-func GetBondsByPersonIds(ids []int) ([]Bond, error) {
+func GetBondsByPersonIdsUsingRepositories(ids []int) ([]Bond, error) {
 	bonds, err := bondsRepository.GetBondsOf(ids)
 	if err != nil {
 		errMsg := fmt.Sprintf("error while bonds animals : '%v'", err)
@@ -69,4 +71,42 @@ func GetBondsByPersonIds(ids []int) ([]Bond, error) {
 		}
 	}
 	return bondsDTO, nil
+}
+
+func GetBondsByPersonIdsDirectDBAccess(ids []int) ([]Bond, error) {
+	rows, err := postgres.Conn.Query(`
+		SELECT p.id,p.name,
+					 a.id,a.name,a.kind
+		FROM bond b
+		INNER JOIN person p ON p.id = b.person_id
+		INNER JOIN animal a ON a.id = b.animal_id
+		WHERE b.person_id = ANY($1)`, pq.Array(ids))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	bonds := []Bond{}
+	for rows.Next() {
+		bondPtr, err := scanBond(rows)
+		if err != nil {
+			return nil, err
+		}
+		bonds = append(bonds, *bondPtr)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+	return bonds, nil
+}
+
+// Scans a row interpreting it as 'services.Bond' struct
+func scanBond(rows postgres.RowScanner) (*Bond, error) {
+	var bond Bond
+
+	err := rows.Scan(&bond.Person.Id, &bond.Person.Name, &bond.Animal.Id, &bond.Animal.Name, &bond.Animal.Kind)
+	if err != nil {
+		return nil, err
+	}
+	return &bond, nil
 }

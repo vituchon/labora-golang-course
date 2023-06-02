@@ -16,7 +16,7 @@ func GetBondsByPersonsIds(input io.Reader, output io.Writer) {
 		return
 	}
 
-	bonds, err := services.GetBondsByPersonIds([]int{id})
+	bonds, err := services.GetBondsByPersonIdsUsingRepositories([]int{id})
 	if err != nil {
 		errMsg := fmt.Sprintf("error while retrieving bonds for person(id=%d): '%v'\n", id, err)
 		fmt.Println(errMsg)
