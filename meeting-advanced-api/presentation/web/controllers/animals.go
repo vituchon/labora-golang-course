@@ -6,20 +6,7 @@ import (
 	"strconv"
 
 	"github.com/vituchon/labora-golang-course/meeting-advanced-api/model"
-	"github.com/vituchon/labora-golang-course/meeting-advanced-api/repositories"
-	"github.com/vituchon/labora-golang-course/meeting-advanced-api/repositories/postgres"
 )
-
-var animalsRepository repositories.Animals
-
-func init() {
-	// INYECCION DE DEPEDENCIA (Repositorio en memoria o en base de daatos)
-	// memoria
-	//animalsRepository = memory.NewAnimalsStorage()
-
-	// base de datos (postgres)
-	animalsRepository = postgres.NewAnimalsStorage()
-}
 
 func GetAnimals(response http.ResponseWriter, request *http.Request) {
 	animals, err := animalsRepository.GetAll()

@@ -9,7 +9,26 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/vituchon/labora-golang-course/meeting-advanced-api/repositories"
+	"github.com/vituchon/labora-golang-course/meeting-advanced-api/repositories/postgres"
 )
+
+var animalsRepository repositories.Animals
+var bondsRepository repositories.Bonds
+var personRepository repositories.Persons
+
+func init() {
+	// INYECCION DE DEPEDENCIA (Repositorio en memoria o en base de datos)
+	// memoria
+	// animalsRepository = memory.NewAnimalsStorage()
+	// personRepository = memory.NewPersonsStorage()
+	// bondsRepository = memory.NewBondsStorage()
+
+	// base de datos (postgres)
+	animalsRepository = postgres.NewAnimalsStorage()
+	personRepository = postgres.NewPersonsStorage()
+	bondsRepository = postgres.NewBondsStorage()
+}
 
 func Healthcheck(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Access-Control-Allow-Origin", "*")
