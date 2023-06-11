@@ -5,15 +5,15 @@ import (
 	"github.com/vituchon/labora-golang-course/meeting-crud-api/repositories"
 )
 
-type AnimalsStorage struct {
+type AnimalsRepository struct {
 }
 
-func NewAnimalsStorage() *AnimalsStorage {
-	return &AnimalsStorage{}
+func NewAnimalsRepository() *AnimalsRepository {
+	return &AnimalsRepository{}
 }
 
 // Gets all legal entities for a list of organizations
-func (repo *AnimalsStorage) GetAll() ([]model.Animal, error) {
+func (repo *AnimalsRepository) GetAll() ([]model.Animal, error) {
 	rows, err := Conn.Query(`
 		SELECT id, name, kind
 		FROM animal`)
@@ -37,7 +37,7 @@ func (repo *AnimalsStorage) GetAll() ([]model.Animal, error) {
 }
 
 // Gets an specific legal animal by id
-func (repo *AnimalsStorage) GetById(id int) (*model.Animal, error) {
+func (repo *AnimalsRepository) GetById(id int) (*model.Animal, error) {
 	row := Conn.QueryRow(`
 		SELECT id, name, kind
 		FROM animal
@@ -46,7 +46,7 @@ func (repo *AnimalsStorage) GetById(id int) (*model.Animal, error) {
 }
 
 // Creates a legal animal
-func (repo *AnimalsStorage) Create(animal model.Animal) (*model.Animal, error) {
+func (repo *AnimalsRepository) Create(animal model.Animal) (*model.Animal, error) {
 	createQuery := `INSERT INTO animal (name, kind) VALUES ($1, $2) returning id`
 	err := Conn.QueryRow(createQuery, animal.Name, animal.Kind).Scan(&animal.Id)
 	if err != nil {
@@ -56,7 +56,7 @@ func (repo *AnimalsStorage) Create(animal model.Animal) (*model.Animal, error) {
 }
 
 // Updates a legal animal (legal_id, session_id, name, is_default_biller)
-func (repo *AnimalsStorage) Update(animal model.Animal) (*model.Animal, error) {
+func (repo *AnimalsRepository) Update(animal model.Animal) (*model.Animal, error) {
 	if animal.Id == nil {
 		return nil, repositories.EntityNotExistsErr
 	}
@@ -68,7 +68,7 @@ func (repo *AnimalsStorage) Update(animal model.Animal) (*model.Animal, error) {
 	return &animal, nil
 }
 
-func (repo *AnimalsStorage) Delete(id int) (err error) {
+func (repo *AnimalsRepository) Delete(id int) (err error) {
 	deleteQuery := `DELETE FROM animal WHERE id = $1`
 	_, err = Conn.Exec(deleteQuery, id)
 	return

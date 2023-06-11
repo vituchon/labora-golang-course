@@ -82,10 +82,10 @@ var animalsRepository repositories.Animals
 func init() {
 	// INYECCION DE DEPEDENCIA (Repositorio en memoria o en base de daatos)
 	// memoria
-	//animalsRepository = memory.NewAnimalsStorage()
+	//animalsRepository = memory.NewAnimalsRepository()
 
 	// base de datos (postgres)
-	animalsRepository = postgres.NewAnimalsStorage()
+	animalsRepository = postgres.NewAnimalsRepository()
 }
 
 func performAction(command Command) {
