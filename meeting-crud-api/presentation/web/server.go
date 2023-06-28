@@ -7,7 +7,10 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
+
+	_ "net/http/pprof"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -15,16 +18,43 @@ import (
 )
 
 func StartServer() {
-
+	go func() { // una forma que se acopla bien a cualquier implementación de servidor web que usemos (http, mux, chi, etc.)
+		const port = 9091
+		var portStr string = ":" + strconv.Itoa(port)
+		fmt.Printf("Server for profiling listening at port %v\n", portStr)
+		err := http.ListenAndServe(portStr, nil)
+		if err != nil {
+			fmt.Println("Unable to start server for profiling afairrs: ", err)
+		}
+		// Para que funciones se llevan más tiempo (y detectar posibles cuellos de botella) se debe hacer lo que llaman un "profile":
+		// -- en realidad sirve para ver cuanto tiempo de CPU asigna a cada función de nuestro programa, ojota que aparecen MUCHISIMAS funciones que son de los paquetes que importamos y no tenemos idea de que existian hasta ahora... ufff, bueno vale ignorar! se puede buscar por nombre de función y van a ver que se remarcan los cuadros de sus funciones con las métricas!!!!
+		// 1) arrancar la app
+		// 2) luego ejecutar `curl --output pprof.out "localhost:9091/debug/pprof/profile?seconds=10"` y se guardar en el archivo pprof.out información de perfil, realmente hay que hacerlo trabajar al servidor para que salga el reporte!! consideren usar el truco de hacer muchos hits (peticiones a un endpoint) usando los comandos que vienen con el interprete de comandos (bash), yo hice algo como esto: `for((i=1;i<=100;i+=1)); do curl "http://localhost:9090/api/v1/animals"; done``, sí se ejecuta 100 veces un mismo curl!! que fácil es bombardear la red de peticiones!!!! no lo hagan en casa!
+		// 3) luego ejecutar `go tool pprof -http localhost:9092 profile.out` para ue se vea lindo a travéz de una pestaña del navegador
+		// ----
+		// de forma alternativa pueden entrar a http://localhost:9091/debug/pprof/ y explorar un poco... se ven muchas cosas... no llegue muy lejos tampoco...
+	}()
 	router := buildRouter()
+
+	// Descomentar en caso de querer probar forma alternativa que sirve para mux!. Tomada de https://www.jajaldoang.com/post/profiling-go-app-with-pprof/ y https://groups.google.com/g/golang-nuts/c/TjDMXyBDYG4
+	/*router.HandleFunc("/debug/pprof/", pprof.Index)
+	router.HandleFunc("/debug/pprof/heap", pprof.Index)
+	router.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	router.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	router.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	router.HandleFunc("/debug/pprof/trace", pprof.Trace)
+	*/
 	server := &http.Server{
 		Addr:         ":9090",
 		Handler:      router,
 		ReadTimeout:  40 * time.Second,
 		WriteTimeout: 300 * time.Second,
 	}
-	fmt.Printf("animal crud api server listening at port %v", server.Addr)
-	server.ListenAndServe()
+	fmt.Printf("Animal crud api server listening at port %v\n", server.Addr)
+	err := server.ListenAndServe()
+	if err != nil {
+		fmt.Println("Unable to start app: ", err)
+	}
 }
 
 func buildRouter() *mux.Router {
@@ -33,8 +63,8 @@ func buildRouter() *mux.Router {
 	// TODO : word "presentation" in the path may be redudant, perpahs using just "assets" would be enought!
 	root.PathPrefix("/presentation/web/assets").Handler(fileServer)
 	root.NotFoundHandler = http.HandlerFunc(NoMatchingHandler)
-
 	Get := BuildSetHandleFunc(root, "GET")
+
 	Get("/healthcheck", controllers.Healthcheck)
 	Get("/version", controllers.Version)
 
