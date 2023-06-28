@@ -24,19 +24,21 @@ func StartServer() {
 		fmt.Printf("Server for profiling listening at port %v\n", portStr)
 		err := http.ListenAndServe(portStr, nil)
 		if err != nil {
-			fmt.Println("Unable to start server for profiling afairrs: ", err)
+			fmt.Println("Unable to start server for profiling affairs: ", err)
 		}
-		// Para que funciones se llevan más tiempo (y detectar posibles cuellos de botella) se debe hacer lo que llaman un "profile":
-		// -- en realidad sirve para ver cuanto tiempo de CPU asigna a cada función de nuestro programa, ojota que aparecen MUCHISIMAS funciones que son de los paquetes que importamos y no tenemos idea de que existian hasta ahora... ufff, bueno vale ignorar! se puede buscar por nombre de función y van a ver que se remarcan los cuadros de sus funciones con las métricas!!!!
+		// Para averiguar cuales funciones llevan más tiempo (y detectar posibles cuellos de botella) se debe hacer lo que llaman un "profile":
+		// -- lo que en realidad sirve para ver cuanto tiempo de CPU (procesador) se asigna a cada función de durante un determinado tiempo de ejecución de nuestro programa
 		// 1) arrancar la app
-		// 2) luego ejecutar `curl --output pprof.out "localhost:9091/debug/pprof/profile?seconds=10"` y se guardar en el archivo pprof.out información de perfil, realmente hay que hacerlo trabajar al servidor para que salga el reporte!! consideren usar el truco de hacer muchos hits (peticiones a un endpoint) usando los comandos que vienen con el interprete de comandos (bash), yo hice algo como esto: `for((i=1;i<=100;i+=1)); do curl "http://localhost:9090/api/v1/animals"; done``, sí se ejecuta 100 veces un mismo curl!! que fácil es bombardear la red de peticiones!!!! no lo hagan en casa!
-		// 3) luego ejecutar `go tool pprof -http localhost:9092 profile.out` para ue se vea lindo a travéz de una pestaña del navegador
+		// 2) luego ejecutar `curl --output profile.out "localhost:9091/debug/pprof/profile?seconds=10"` y se guardar en el archivo profile.out información de perfil, realmente hay que hacerlo trabajar al servidor para que salga el reporte, o sea inundenlo de requests!!! consideren usar el truco de hacer muchos hits (peticiones a un endpoint) usando los comandos que vienen con el interprete de comandos (bash), yo hice algo como esto: `for((i=1;i<=100;i+=1)); do curl "http://localhost:9090/api/v1/animals"; done``, sí se ejecuta 100 veces un mismo curl!! que fácil es bombardear la red de peticiones!!!! no lo hagan en casa!
+		// 3) luego ejecutar `go tool pprof -http localhost:9092 profile.out` para que se vea lindo a travéz de una pestaña del navegador, ojota que aparecen MUCHISIMAS funciones que son de los paquetes que importamos y no tenemos idea de que existian hasta ahora... ufff, bueno vale ignorar! se puede buscar por nombre de función y van a ver que se remarcan los cuadros de sus funciones con las métricas!!!!
+		// --
 		// ----
 		// de forma alternativa pueden entrar a http://localhost:9091/debug/pprof/ y explorar un poco... se ven muchas cosas... no llegue muy lejos tampoco...
 	}()
 	router := buildRouter()
 
-	// Descomentar en caso de querer probar forma alternativa que sirve para mux!. Tomada de https://www.jajaldoang.com/post/profiling-go-app-with-pprof/ y https://groups.google.com/g/golang-nuts/c/TjDMXyBDYG4
+	// Abajo hay código que sirve al mismo proposito que al de arriba, solo que no usa un servidor web aparte sino el mismo servidor web MUX en donde levantamos la API.
+	// Tomada de https://www.jajaldoang.com/post/profiling-go-app-with-pprof/ y https://groups.google.com/g/golang-nuts/c/TjDMXyBDYG4
 	/*router.HandleFunc("/debug/pprof/", pprof.Index)
 	router.HandleFunc("/debug/pprof/heap", pprof.Index)
 	router.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
